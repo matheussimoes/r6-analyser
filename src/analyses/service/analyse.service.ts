@@ -37,32 +37,38 @@ export class AnalyseService {
 
     public async getPlayer(playerName: string) {
         const allMatches = (await this.matchService.getMatches());
-        console.log(allMatches);
+        let playerMatches = []
 
-        const playerMatches = allMatches.filter((match) => {
-            match.players.filter((player) => {
-                if (player.name === playerName) {
-                    return true;
+        for (let match of allMatches) {
+            for (let player of match.players) {
+                if (player.name.toLowerCase() === playerName.toLowerCase()) {
+                    playerMatches.push(match);
                 }
-            })
-        })
-
-        //
-        console.log(playerMatches);
+            }
+        }
 
         const matchesPlayed = playerMatches.length;
+        const wins = playerMatches.filter((match) => match.finalResult === 'win').length
+        const losses = matchesPlayed - wins;
+        const wlRatio = (wins * 100) / matchesPlayed;
+        const kd = this.getPlayerKd(playerMatches, playerName);
+        const kdRatio = parseFloat((kd.playerKills / kd.playerDeaths).toFixed(2));
+        const mvpQtd = playerMatches.filter((match) => match.mvp.toLowerCase() === playerName.toLowerCase()).length;
+        const fraggerQtd = playerMatches.filter((match) => match.fragger.toLowerCase() === playerName.toLowerCase()).length;;
+
+
 
         return {
             playerName,
             matchesPlayed,
-            "wins": 3,
-            "loss": 9,
-            "winsPercentage": 55,
-            "kdPercentage": 1.13,
-            "mostAtkPlayed": "Pulse",
-            "mostDefPlayed": "Valkerye",
-            "mvpQtd": 5,
-            "fraggerQtd": 5
+            wins,
+            losses,
+            wlRatio,
+            "totalKills": kd.playerKills,
+            "totalDeaths": kd.playerDeaths,
+            kdRatio,
+            mvpQtd,
+            fraggerQtd
         };
     }
 
@@ -121,6 +127,25 @@ export class AnalyseService {
         });
 
         return parseFloat((mapKills / mapDeaths).toFixed(2));
+    }
+
+    private getPlayerKd(playerMatches, playerName) {
+        let playerKills: number = 0;
+        let playerDeaths: number = 0;
+
+        playerMatches.forEach(match => {
+            match.players.forEach(player => {
+                if (player.name.toLowerCase() === playerName) {
+                    playerKills = playerKills + player.kills
+                    playerDeaths = playerDeaths + player.deaths
+                }
+            })
+        });
+
+        return {
+            playerKills,
+            playerDeaths
+        };
     }
 
     private getMostPicked(filterOption, matches) {
