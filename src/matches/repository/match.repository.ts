@@ -1,4 +1,4 @@
-import { Match } from "../interface/match.model";
+import { Match } from "../modules/match.model";
 import { bdSimulationMock } from "../match.mock";
 
 export class MatchRepository {

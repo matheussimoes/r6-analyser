@@ -2,7 +2,6 @@ const matchMock = {
     "id": "1",
     "date": "15/06/2021",
     "mapName": "CHALE",
-    "rounds": [],
     "bans": {
         "atk1": "Ash",
         "atk2": "Blitz",
@@ -59,7 +58,6 @@ const bdSimulationMock = [{
     "fragger": "Mulambo"
 },
 {
-    "id": "2",
     "date": "15/06/2021",
     "mapName": "fronteira",
     "startingSide": "DEF",
@@ -147,7 +145,6 @@ const bdSimulationMock = [{
     "fragger": "Kejinho"
 },
 {
-    "id": "4",
     "date": "15/06/2021",
     "mapName": "litoral",
     "startingSide": "DEF",
